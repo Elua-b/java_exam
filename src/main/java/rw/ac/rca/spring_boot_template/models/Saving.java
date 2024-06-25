@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import rw.ac.rca.spring_boot_template.enumerations.EType;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 @Data
@@ -23,7 +24,7 @@ public class Saving {
     @Column(name = "amount")
     private double amount;
     @Column(name = "banking_date")
-    private Date BankingDate;
+    private LocalDate BankingDate;
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private EType type= EType.SAVING;

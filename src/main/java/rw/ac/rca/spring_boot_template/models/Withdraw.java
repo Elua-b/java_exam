@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import rw.ac.rca.spring_boot_template.enumerations.EType;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
@@ -24,7 +25,7 @@ public class Withdraw {
     @Column(name = "amount")
     private double amount;
     @Column(name = "banking_date")
-    private Date bankingDate;
+    private LocalDate bankingDate;
     @Column(name = "type")
     private EType type= EType.WITHDRAW;
     @ManyToOne

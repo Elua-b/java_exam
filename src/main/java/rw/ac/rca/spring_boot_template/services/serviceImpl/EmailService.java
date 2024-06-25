@@ -47,8 +47,8 @@ public void sendTransactionEmail(Customer fromCustomer, Customer toCustomer, dou
     context.setVariable("toCustomer", toCustomer.getFirstName() + " " + toCustomer.getLastName());
     context.setVariable("amount", amount);
 
-    String htmlContent = templateEngine.process("../../../../templates/transaction-email.html", context);
-
+    String htmlContent = templateEngine.process("transaction-email", context);
+    System.out.println(fromCustomer.getEmail());
     helper.setTo(fromCustomer.getEmail());
     helper.setSubject("Transaction Notification");
     helper.setText(htmlContent, true);
@@ -96,8 +96,9 @@ public void sendTransactionEmail(Customer fromCustomer, Customer toCustomer, dou
         Context context = new Context();
         context.setVariable("customer", customer.getFirstName() + " " + customer.getLastName());
         context.setVariable("amount", amount);
+        context.setVariable("account", customer.getAccount());
 
-        String htmlContent = templateEngine.process("emails/saving-email.html", context);
+        String htmlContent = templateEngine.process("saving-email", context);
 
         helper.setTo(customer.getEmail());
         helper.setSubject("Saving Transaction Notification");
@@ -106,15 +107,17 @@ public void sendTransactionEmail(Customer fromCustomer, Customer toCustomer, dou
         javaMailSender.send(mimeMessage);
     }
 
-    public void sendWithdrawEmail(Customer customer, double amount) throws MessagingException {
+    public void sendWithdrawEmail(Customer customer, double amount) throws  MessagingException {
+
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
         Context context = new Context();
         context.setVariable("customer", customer.getFirstName() + " " + customer.getLastName());
         context.setVariable("amount", amount);
+        context.setVariable("account", customer.getAccount());
 
-        String htmlContent = templateEngine.process("emails/withdraw-email.html", context);
+        String htmlContent = templateEngine.process("withdraw-email.html", context);
 
         helper.setTo(customer.getEmail());
         helper.setSubject("Withdrawal Transaction Notification");

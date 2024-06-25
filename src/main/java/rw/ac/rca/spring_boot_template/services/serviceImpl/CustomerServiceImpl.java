@@ -11,6 +11,7 @@ import rw.ac.rca.spring_boot_template.models.Customer;
 import rw.ac.rca.spring_boot_template.repositories.ICustomerRepository;
 import rw.ac.rca.spring_boot_template.services.CustomerService;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -29,6 +30,7 @@ public class CustomerServiceImpl implements CustomerService {
             customer.setDob(createCustomerDTO.getDob());
             customer.setBalance(createCustomerDTO.getBalance());
             customer.setAccount(createCustomerDTO.getAccount());
+            customer.setLastUpdatedDateTime(LocalDate.now());
 
             // Persist the entity
             entityManager.persist(customer);

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
@@ -38,7 +39,7 @@ public class Customer {
     @Column(name = "balance")
     private double balance;
     @Column(name = "updated_time")
-    private LocalDateTime lastUpdatedDateTime;
+    private LocalDate lastUpdatedDateTime;
 
 
 

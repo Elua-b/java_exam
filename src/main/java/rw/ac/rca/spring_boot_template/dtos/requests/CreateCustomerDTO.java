@@ -1,9 +1,6 @@
 package rw.ac.rca.spring_boot_template.dtos.requests;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +36,7 @@ public class CreateCustomerDTO {
     private String account;
     @NotNull(message = "Balance is required")
     //validate if balance is a number
-    @Pattern(regexp = "\\d+", message = "Balance must be a number")
+    @DecimalMin(value = "0", message = "Balance must be a positive number")
     private int balance;
 
 }

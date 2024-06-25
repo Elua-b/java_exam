@@ -1,5 +1,6 @@
 package rw.ac.rca.spring_boot_template.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class CustomerController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createCustomer(@RequestBody CreateCustomerDTO createCustomerDTO) {
+    public ResponseEntity<ApiResponse> createCustomer(@RequestBody  @Valid CreateCustomerDTO createCustomerDTO) {
         return ResponseEntity.ok().body(new ApiResponse(true, "Successfully created the customer", customerService.createCustomer(createCustomerDTO)));
     }
     @PutMapping("/{customerId}")

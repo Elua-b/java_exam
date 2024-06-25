@@ -15,6 +15,7 @@ import rw.ac.rca.spring_boot_template.repositories.IWithdrawRepository;
 import rw.ac.rca.spring_boot_template.services.BankingService;
 
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -30,55 +31,69 @@ public class BankingServiceImpl implements BankingService {
 
     private final  EmailService emailService;
     @Override
-    public void save(UUID id, double amount) {
-        Customer customer = customerRepository.findById(id).get();
-        if(customer == null){
-            throw new InternalServerErrorException("Customer not found");
+    public void save(UUID id, double amount)  {
+        try{
+            Customer customer = customerRepository.findById(id).get();
+            if(customer == null){
+                throw new InternalServerErrorException("Customer not found");
+            }
+            customer.setBalance(customer.getBalance() + amount);
+            customerRepository.save(customer);
+
+            Saving saving=new Saving();
+            saving.setCustomer(customer);
+            saving.setAmount(amount);
+            saving.setBankingDate(LocalDate.now());
+
+            savingRepository.save(saving);
+            emailService.sendSavingEmail(customer, amount);
+            //send transaction email
+
+
+            Message message = new Message();
+            message.setCustomer(customer);
+            message.setMessage("Saved " + amount + " to the account");
+            message.setCreatedDateTime(LocalDate.now());
+            messageRepository.save(message);
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException("Internal Server Error");
         }
-        customer.setBalance(customer.getBalance() + amount);
-        customerRepository.save(customer);
 
-        Saving saving=new Saving();
-        saving.setCustomer(customer);
-        saving.setAmount(amount);
-        saving.setBankingDate(new Date());
-
-        savingRepository.save(saving);
-        //send transaction email
-
-
-        Message message = new Message();
-        message.setCustomer(customer);
-        message.setMessage("Saved " + amount + " to the account");
-        message.setCreatedDateTime(new Date());
-        messageRepository.save(message);
 
     }
 
     @Override
     public void withdraw(UUID id, double amount) {
-      Customer customer= customerRepository.findById(id).get();
-        if(customer == null){
-            throw new InternalServerErrorException("Customer not found");
+        try{
+            Customer customer= customerRepository.findById(id).get();
+            if(customer == null){
+                throw new InternalServerErrorException("Customer not found");
+            }
+            if(customer.getBalance() < amount){
+                throw new InternalServerErrorException("Insufficient funds");
+            }
+            customer.setBalance(customer.getBalance() - amount);
+            customerRepository.save(customer);
+
+            Withdraw withdraw=new Withdraw();
+            withdraw.setCustomer(customer);
+            withdraw.setAmount(amount);
+            withdraw.setBankingDate(LocalDate.now());
+
+            withDrawRepository.save(withdraw);
+            //email service
+            emailService.sendWithdrawEmail(customer, amount);
+            Message message = new Message();
+            message.setCustomer(customer);
+            message.setCreatedDateTime(LocalDate.now());
+            message.setMessage("Withdrew " + amount + " from the account");
+            messageRepository.save(message);
+        }catch (Exception e) {
+            e.printStackTrace();
+            throw new InternalServerErrorException("Internal Server Error");
         }
-        if(customer.getBalance() < amount){
-            throw new InternalServerErrorException("Insufficient funds");
-        }
-        customer.setBalance(customer.getBalance() - amount);
-        customerRepository.save(customer);
 
-        Withdraw withdraw=new Withdraw();
-        withdraw.setCustomer(customer);
-        withdraw.setAmount(amount);
-        withdraw.setBankingDate(new Date());
-
-        withDrawRepository.save(withdraw);
-
-        Message message = new Message();
-        message.setCustomer(customer);
-        message.setMessage("Withdrew " + amount + " from the account");
-        message.setCreatedDateTime(new Date());
-        messageRepository.save(message);
 
 
     }
@@ -110,7 +125,7 @@ public class BankingServiceImpl implements BankingService {
 
             Message message = new Message();
             message.setCustomer(fromSaving.getCustomer());
-            message.setCreatedDateTime(new Date());
+            message.setCreatedDateTime(LocalDate.now());
             message.setMessage("Transferred " + amount + " to " + toCustomer.get().getFirstName() + " " + toCustomer.get().getLastName());
 
             messageRepository.save(message);
