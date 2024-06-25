@@ -1,0 +1,15 @@
+<!-- src/main/resources/templates/emails/transaction-email.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction Notification</title>
+</head>
+<body>
+<p>Dear <span th:text="${fromCustomer}">Customer</span>,</p>
+<p>You have successfully transferred <strong>$<span th:text="${amount}">0.00</span></strong> to <span th:text="${toCustomer}">Receiver</span>'s account.</p>
+<p>Thank you for using our services!</p>
+<p>Best regards,</p>
+<p>Your Bank</p>
+</body>
+</html>
