@@ -5,20 +5,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "Customer")
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "Customer", uniqueConstraints = {@UniqueConstraint(columnNames = {"mobile"})})
+@OnDelete(action = OnDeleteAction.CASCADE)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "customer_id")
+    @GeneratedValue (strategy = GenerationType.UUID)
     private UUID id;
+
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")

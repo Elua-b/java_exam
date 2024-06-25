@@ -16,6 +16,7 @@ import rw.ac.rca.spring_boot_template.services.BankingService;
 
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -85,13 +86,18 @@ public class BankingServiceImpl implements BankingService {
     @Override
     public void transfer(UUID from, UUID to, double amount) {
         try {
-            Saving fromSaving = savingRepository.findByCustomerId(from);
+            List<Saving> fromSavings = savingRepository.findByCustomerId(from);
+            if (fromSavings.isEmpty()) {
+                throw new InternalServerErrorException("No savings account found for customer");
+            }
             Optional<Customer> toCustomer = customerRepository.findById(to);
 
             //check if the customer exists
             if (toCustomer.isEmpty()) {
                 throw new InternalServerErrorException("Customer not found");
             }
+            Saving fromSaving = fromSavings.get(0);
+
             //check if the saving account exists
             if (fromSaving.getAmount() < amount) {
                 throw new Exception("Insufficient funds in saving account");

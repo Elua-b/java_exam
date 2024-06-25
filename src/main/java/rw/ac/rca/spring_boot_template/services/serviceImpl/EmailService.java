@@ -47,7 +47,7 @@ public void sendTransactionEmail(Customer fromCustomer, Customer toCustomer, dou
     context.setVariable("toCustomer", toCustomer.getFirstName() + " " + toCustomer.getLastName());
     context.setVariable("amount", amount);
 
-    String htmlContent = templateEngine.process("emails/transaction-email.html", context);
+    String htmlContent = templateEngine.process("../../../../templates/transaction-email.html", context);
 
     helper.setTo(fromCustomer.getEmail());
     helper.setSubject("Transaction Notification");

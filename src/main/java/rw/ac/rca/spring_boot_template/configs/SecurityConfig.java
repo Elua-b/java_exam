@@ -60,6 +60,7 @@ public class SecurityConfig {
 			"/api/users/is-code-valid",
 			"/api/documents/download/**",
 			"/api/v1/customers/**",
+			"/api/v1/banking/**"
 	};
 
 	@Bean
